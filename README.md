@@ -41,6 +41,13 @@
 
     should be working as usual from here.
 
+6. Create .env file that includes (you dont need to use quotation marks for text after the equals symbol):
+
+    ```
+     DB_KEY = key to database
+     PORT = 5000
+     JWT_SECRET = any random text you can think off 
+    ```
 
 ## Issues with setting up the project: 
 🚧🚧🚧
