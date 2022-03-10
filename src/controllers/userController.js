@@ -2,12 +2,20 @@ const jwt = require("jsonwebtoken");
 const { randomBytes, scryptSync, timingSafeEqual } = require("crypto");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const mongoose = require("mongoose");
 
 // function to create a token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
+};
+// quick function to make it easier to throw status codes with messages
+// could be a helper function in a separate folder
+const throwCustomError = (message, statusCode) => {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
 };
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -19,6 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
     error.statusCode = 400;
     throw error;
   }
+
   // check if user already exists
   const userExists = await User.findOne({ email: email });
   // we might want to check if username is in use
@@ -27,15 +36,11 @@ const registerUser = asyncHandler(async (req, res) => {
   if (userExists) {
     // give back an error if user exists
     res.status(400);
-    const error = new Error("User already exists");
-    error.statusCode = 400;
-    throw error;
+    throw throwCustomError("User already exists", 400);
   } else if (userNameTaked) {
     // give back an error if username is taken
     res.status(400);
-    const error = new Error("Username is taken");
-    error.statusCode = 400;
-    throw error;
+    throw throwCustomError("Username is taken", 400);
   }
 
   // encript the password
@@ -59,9 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(400);
-    const error = new Error("Invalid user data");
-    error.statusCode = 400;
-    throw error;
+    throw throwCustomError("Invalid user data", 400);
   }
 });
 
@@ -92,9 +95,21 @@ const loginUser = asyncHandler(async (req, res) => {
     } else {
       // if the password dont match we return information
       res.status(400);
-      const error = new Error("Invalid password");
-      error.statusCode = 400;
-      throw error;
+      throw throwCustomError("Invalid password", 400);
+    }
+
+    if (match) {
+      // we match the entered and saved passwords in buffer format
+      console.log("user is correct");
+      res.status(201).json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(400);
+      throw throwCustomError("User was not found", 400);
     }
   } else {
     res.status(400);
@@ -105,8 +120,11 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
+  // did this because mongoose expects an object
+  // and this lets us see more possible errors like invalid id lenghts
+  const userId = mongoose.Types.ObjectId(req.body.id);
   // finds user by id
-  const user = await User.findById(req.body.id);
+  const user = await User.findById(userId);
 
   if (user) {
     res.status(200).json({
@@ -115,9 +133,7 @@ const getUser = asyncHandler(async (req, res) => {
       email: user.email,
     });
   } else {
-    const error = new Error("User not found");
-    error.statusCode = 400;
-    throw error;
+    throw throwCustomError("User not found", 400);
   }
 });
 
