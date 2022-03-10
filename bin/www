@@ -7,6 +7,9 @@
 const app = require("../src/app");
 const debug = require("debug")("renginiupuslapis-backend:server");
 const http = require("http");
+require("dotenv").config({path:__dirname+'/../src/configs/.env'});
+const connectDB = require('../src/configs/db.config');
+const { path } = require("../src/app");
 
 /**
  * Get port from environment and store in Express.
@@ -48,6 +51,12 @@ function normalizePort(val) {
 
   return false;
 }
+
+/**
+ * Connect to mongo database
+ */
+
+connectDB();
 
 /**
  * Event listener for HTTP server "error" event.
