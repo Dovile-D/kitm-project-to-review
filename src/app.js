@@ -29,8 +29,6 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.statusCode || 500).json({message: err.message});
-  //res.render("error"); // poo poo stinky why do you wanna render when we dont have a view engine
-  // we aint front end we dont render
 });
 
 module.exports = app;
