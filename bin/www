@@ -7,9 +7,8 @@
 const app = require("../src/app");
 const debug = require("debug")("renginiupuslapis-backend:server");
 const http = require("http");
-require("dotenv").config({path:__dirname+'/../src/configs/.env'});
-const connectDB = require('../src/configs/db.config');
-const { path } = require("../src/app");
+require("dotenv").config({ path: __dirname + "/../src/configs/.env" });
+const connectDB = require("../src/configs/db.config");
 
 /**
  * Get port from environment and store in Express.
