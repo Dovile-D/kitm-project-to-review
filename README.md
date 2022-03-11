@@ -16,19 +16,19 @@
 2. After successfully setting up nvm:
 
    ```
-           nvm install lts && nvm use lts
+   nvm install lts && nvm use lts
    ```
 
-3. One of simplies method to get the latest stable version of yarn 1 is:
+3. One of simplies method to get the latest stable version of yarn is:
 
    ```
-    npm install --global yarn
+   yarn set version stable
    ```
 
 4. Simply run:
 
    ```
-       yarn or yarn install
+   yarn or yarn install
    ```
 
    inside of the root folder in the project to get all of the necessary dependencies.
