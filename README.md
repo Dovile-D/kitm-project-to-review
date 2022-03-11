@@ -1,7 +1,7 @@
 # Back-End environment requirements
 
 - Node.js >= 16.10
-- Latest stable version of yarn 1
+- Latest stable version of yarn
 
 ## Installation
 
