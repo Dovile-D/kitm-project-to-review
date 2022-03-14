@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 // event has a name, date/time, description and photo
 // we can add more later
-const eventSchema = mongoose.Schema(
+const eventSchema = new mongoose.Schema(
   {
     eventName: {
       type: String,
